@@ -15,15 +15,15 @@ function Test-CloudFlare {
     This is the basic usage. -ComputerName is the only required variable.
     The results will be returned in a PSObject.
     .EXAMPLE
-    Test-CloudFlare -ComputerName 192.168.0.1
+    Test-CloudFlare -ComputerName '192.168.0.1','192.168.0.7','192.168.0.25'
 
-    CREATING A .txt FILE
-    Setting -Output to 'Text' will create a .txt file and then open it in Notepad.
+    TESTING MULTIPLE COMPUTERS
+    You can test multiple computers in one command by supplying a list of computers.
     
     .NOTES
     Author: Dylan Martin
     Last Edit: 2021-12-08
-    Version 1.0 - Tools published to Github
+    Version 1.1 - Updated comment-based help
     #>
     param(
         # used to select computer for remote session
@@ -88,39 +88,42 @@ function Test-CloudFlare {
 function Get-PipeResults {
     <#
     .SYNOPSIS
-    Execute a connection test on a remote computer.
+    Retrieve objects from pipeline and format for output.
     .DESCRIPTION
-    The user is prompted to supply a computer name or IP address to create a remote session.
-    The remote session is then used to perform a connection test to 'one.one.one.one'.
-    .PARAMETER ComputerName
-    A string, or list of strings, used to identify the computer to create a remote session with.
-    This is a REQUIRED parameter.
+    Get-PipeResults can accept multiple objects from the pipeline and output them to the
+    terminal, to a .txt file, or a .csv file.
+    .PARAMETER PipeInput
+    One or multiple PSObjects. Intended to accept pipeline output.
     .PARAMETER Path
     A path string that specifies the working directory for the script.
     The default is the current users home directory.
+    .PARAMETER FileName
+    A string to be used as the name of any file created by the script.
     .PARAMETER Output
     Used to select the format of the output. The acceptable strings are:
         - Host ([DEFAULT]Writes to the console screen.)
         - CSV (Writes output to a .csv file)
         - Text (Writes output to a .txt file)
     .Example
-    Test-CloudFlare -ComputerName 192.168.0.1
+    Get-Process -Name *shell | Get-PipeResults
 
     DEFAULT USAGE
-    This is the basic usage. -ComputerName is the only required variable.
-    By default, -Output will be 'Host' which causes the results to be printed on the screen.
+    This is the basic usage. By default, -Output will be 'Host' which causes the results
+    to be printed on the screen.
     .EXAMPLE
-    Test-CloudFlare -ComputerName 192.168.0.1 -Output 'Text'
+    Get-Process -Name *shell | Get-PipeResults -Output 'Text'
 
     CREATING A .txt FILE
-    Setting -Output to 'Text' will create a .txt file and then open it in Notepad.
+    Setting -Output to 'Text' will write the output to a .txt file and then
+    open it in Notepad.
     .EXAMPLE
-    Test-CloudFlare -ComputerName 192.168.0.1 -Output 'CSV'
+    Get-Process -Name *shell | Get-PipeResults -Output 'CSV'
 
     CREATING A .CSV FILE
-    Setting -Output to 'CSV' will create a .csv file. You can then view it with the application of your choice.
+    Setting -Output to 'CSV' will create a .csv file. You can then view it with the
+    application of your choice.
     .EXAMPLE
-    Test-CloudFlare -ComputerName 192.168.0.1 -Output 'CSV' -Path "$env:USERPROFILE\Desktop"
+    Get-Process -Name *shell | Get-PipeResults -Output 'Text' -Path "$env:USERPROFILE\Desktop"
 
     CHOOSING THE LOCATION OF THE OUTPUT FILE
     Using the -Path parameter allows you to specify the location of the output file.
@@ -128,8 +131,8 @@ function Get-PipeResults {
     When -Path is ommitted, it defaults to the users home directory.
     .NOTES
     Author: Dylan Martin
-    Last Edit: 2021-11-12
-    Version 1.2 - Added simple error handling for opening remote sessions.
+    Last Edit: 2021-12-08
+    Version 1.1 - Updated comment-based help
     #>
     param (
         [Parameter(
